@@ -5,6 +5,8 @@ import { Bloom, EffectComposer, Noise, Vignette } from '@react-three/postprocess
 import Cabin, { LAYOUT } from './scene/Cabin'
 import CameraRig from './scene/CameraRig'
 import IFE, { channels } from './ife/IFE'
+import AudioDirector from './audio/AudioDirector'
+import { audio } from './audio/engine'
 import { useCabin } from './store'
 import { profile } from '../lib/content'
 import './cabin.css'
@@ -30,9 +32,10 @@ function SeatbackScreen() {
   )
 }
 
-function Boarding({ onBoard }: { onBoard: () => void }) {
+function Boarding({ onBoard }: { onBoard: (sound: boolean) => void }) {
   const { progress, active } = useProgress()
   const phase = useCabin((s) => s.phase)
+  const [sound, setSound] = useState(true)
   const ready = !active && progress >= 100
   useEffect(() => {
     if (ready && phase === 'loading') useCabin.getState().setPhase('gate')
@@ -58,11 +61,26 @@ function Boarding({ onBoard }: { onBoard: () => void }) {
         <div className="gate__bar">
           <span style={{ width: `${Math.min(100, progress)}%` }} />
         </div>
-        <button className="btn btn--primary gate__board" disabled={!ready} onClick={onBoard}>
+        <label className="gate__sound">
+          <input type="checkbox" checked={sound} onChange={(e) => setSound(e.target.checked)} />
+          <span>Cabin audio: engine hum, a little music, and the captain. Headphones recommended.</span>
+        </label>
+        <button className="btn btn--primary gate__board" disabled={!ready} onClick={() => onBoard(sound)}>
           {ready ? 'Board' : 'Preparing the cabin…'}
         </button>
-        <p className="gate__note">Headphones recommended. Sound stays off until you ask for it.</p>
+        <p className="gate__note">Press M at any time to mute. Esc sits you back.</p>
       </div>
+    </div>
+  )
+}
+
+function Captions() {
+  const caption = useCabin((s) => s.caption)
+  if (!caption) return null
+  return (
+    <div className="captions" role="status" aria-live="polite">
+      <span className="captions__who">Captain</span>
+      <p>{caption}</p>
     </div>
   )
 }
@@ -148,7 +166,12 @@ export default function CabinExperience() {
     useCabin.getState().setFocus('overview')
   }
 
-  const board = () => {
+  const board = (sound: boolean) => {
+    // Inside the click, so the browser lets the AudioContext start.
+    if (sound) {
+      useCabin.getState().setSound(true)
+      audio.setEnabled(true)
+    }
     useCabin.getState().setPhase('boarding')
     window.setTimeout(() => useCabin.getState().setPhase('cruise'), 900)
   }
@@ -181,6 +204,8 @@ export default function CabinExperience() {
           <IFE />
         </div>
       )}
+      <Captions />
+      <AudioDirector />
       <Boarding onBoard={board} />
     </div>
   )
