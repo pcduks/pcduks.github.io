@@ -1,6 +1,7 @@
-import { useMemo, useRef } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { PerspectiveCamera, RenderTexture, RoundedBox } from '@react-three/drei'
+import { PerspectiveCamera, RenderTexture, RoundedBox, useCursor } from '@react-three/drei'
+import type { ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three'
 import EarthScene from './EarthScene'
 import { fabricTexture, paneTexture } from './textures'
@@ -95,6 +96,9 @@ function WindowGlass() {
 function Shade() {
   const { w, h } = LAYOUT.window
   const ref = useRef<THREE.Mesh>(null)
+  const drag = useRef<{ startY: number; startShade: number } | null>(null)
+  const [hover, setHover] = useState(false)
+  useCursor(hover, 'ns-resize')
   useFrame((_, dt) => {
     const target = useCabin.getState().shade
     if (!ref.current) return
@@ -102,10 +106,45 @@ function Shade() {
     const goal = h / 2 + h * 0.52 - target * h * 1.02
     ref.current.position.y += (goal - y) * (1 - Math.exp(-dt * 6))
   })
+  const down = (e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation()
+    drag.current = { startY: e.clientY, startShade: useCabin.getState().shade }
+    ;(e.target as Element).setPointerCapture?.(e.pointerId)
+  }
+  const move = (e: ThreeEvent<PointerEvent>) => {
+    if (!drag.current) return
+    const dy = (e.clientY - drag.current.startY) / 260
+    useCabin.getState().setShade(drag.current.startShade + dy)
+  }
+  const up = (e: ThreeEvent<PointerEvent>) => {
+    if (!drag.current) return
+    drag.current = null
+    const st = useCabin.getState()
+    st.setShade(st.shade > 0.5 ? 1 : 0)
+    e.stopPropagation()
+  }
   return (
-    <mesh ref={ref} position={[0, h, 0.02]}>
-      <planeGeometry args={[w + 0.02, h * 1.04]} />
-      <meshStandardMaterial color="#d8d2c4" roughness={0.9} side={THREE.DoubleSide} />
+    <group>
+      <mesh ref={ref} position={[0, h, 0.02]} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerOver={() => setHover(true)} onPointerOut={() => setHover(false)}>
+        <planeGeometry args={[w + 0.02, h * 1.04]} />
+        <meshStandardMaterial color="#d8d2c4" roughness={0.9} side={THREE.DoubleSide} />
+      </mesh>
+      {/* The shade's pull, a thin lip you can grab. */}
+      <ShadeLip shadeRef={ref} />
+    </group>
+  )
+}
+
+function ShadeLip({ shadeRef }: { shadeRef: React.RefObject<THREE.Mesh | null> }) {
+  const { w, h } = LAYOUT.window
+  const ref = useRef<THREE.Mesh>(null)
+  useFrame(() => {
+    if (ref.current && shadeRef.current) ref.current.position.y = shadeRef.current.position.y - h * 0.52
+  })
+  return (
+    <mesh ref={ref} position={[0, h * 0.48, 0.028]}>
+      <boxGeometry args={[w * 0.5, 0.012, 0.012]} />
+      <meshStandardMaterial color="#bfb8a9" roughness={0.6} />
     </mesh>
   )
 }
@@ -137,19 +176,42 @@ function Seatback() {
         <meshBasicMaterial color="#0b1222" toneMapped={false} />
       </mesh>
       <pointLight ref={glow} position={[0, s.y, 0.35]} intensity={0.55} distance={1.6} decay={1.8} color="#8fb0ff" />
-      {/* Tray table, latched */}
+      {/* Tray table, latched. The latch opens the menu. */}
       <RoundedBox args={[0.42, 0.26, 0.02]} radius={0.01} smoothness={4} position={[0, s.y - 0.3, 0.055]}>
         <meshStandardMaterial color="#2b3357" roughness={0.7} />
       </RoundedBox>
-      <mesh position={[0, s.y - 0.155, 0.07]} rotation={[0, 0, 0]}>
-        <boxGeometry args={[0.06, 0.02, 0.012]} />
-        <meshStandardMaterial color="#9aa3b8" roughness={0.4} metalness={0.6} />
-      </mesh>
-      {/* Seat pocket */}
+      <Hotspot position={[0, s.y - 0.155, 0.07]} size={[0.06, 0.02, 0.012]} color="#9aa3b8" metal onClick={() => useCabin.getState().go('menu')} />
+      {/* Seat pocket with the safety card and a boarding pass */}
       <RoundedBox args={[0.48, 0.16, 0.03]} radius={0.01} smoothness={3} position={[0, s.y - 0.52, 0.055]}>
         <meshStandardMaterial color="#161d36" roughness={0.95} bumpMap={fabric} bumpScale={0.004} />
       </RoundedBox>
+      <Hotspot position={[-0.12, s.y - 0.43, 0.06]} size={[0.11, 0.07, 0.004]} color="#f3ead9" rotation={[0, 0, 0.06]} onClick={() => useCabin.getState().go('dutyfree')} />
+      <Hotspot position={[0.1, s.y - 0.44, 0.06]} size={[0.12, 0.06, 0.004]} color="#d94b3a" rotation={[0, 0, -0.04]} onClick={() => useCabin.getState().go('safety')} />
     </group>
+  )
+}
+
+/** A small clickable thing in the cabin that lights up under the pointer. */
+function Hotspot({ position, size, color, rotation = [0, 0, 0], metal = false, onClick }: { position: [number, number, number]; size: [number, number, number]; color: string; rotation?: [number, number, number]; metal?: boolean; onClick: () => void }) {
+  const [hover, setHover] = useState(false)
+  useCursor(hover)
+  return (
+    <mesh
+      position={position}
+      rotation={rotation}
+      onClick={(e) => {
+        e.stopPropagation()
+        onClick()
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation()
+        setHover(true)
+      }}
+      onPointerOut={() => setHover(false)}
+    >
+      <boxGeometry args={size} />
+      <meshStandardMaterial color={color} roughness={metal ? 0.35 : 0.8} metalness={metal ? 0.6 : 0} emissive={color} emissiveIntensity={hover ? 0.5 : 0.04} />
+    </mesh>
   )
 }
 
@@ -172,13 +234,36 @@ function Surroundings() {
       <RoundedBox args={[0.08, 0.06, 0.5]} radius={0.02} smoothness={4} position={[-0.34, -0.36, -0.12]}>
         <meshStandardMaterial color="#2a3150" roughness={0.6} />
       </RoundedBox>
-      {/* Ceiling panel with the reading light and seatbelt sign */}
+      {/* Ceiling, the overhead bin above the window, and a cove light along its edge */}
       <mesh position={[0, 0.95, -0.4]} rotation={[Math.PI / 2, 0, 0]}>
         <planeGeometry args={[3, 2]} />
-        <meshStandardMaterial color="#d9d3c6" roughness={0.9} />
+        <meshStandardMaterial color="#9d968a" roughness={0.9} />
       </mesh>
-      <mesh ref={lens} position={[-0.1, 0.94, -0.3]} rotation={[Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.02, 24]} />
+      <RoundedBox args={[0.5, 0.42, 1.8]} radius={0.06} smoothness={6} position={[-0.72, 0.78, -0.5]} rotation={[0, 0, 0.35]}>
+        <meshStandardMaterial color="#aaa192" roughness={0.9} />
+      </RoundedBox>
+      <mesh position={[-0.5, 0.62, -0.5]} rotation={[0, 0, 0.35]}>
+        <boxGeometry args={[0.012, 0.012, 1.7]} />
+        <meshBasicMaterial color="#8a5a2a" toneMapped={false} />
+      </mesh>
+      <pointLight position={[-0.45, 0.58, -0.5]} intensity={0.12} distance={1.4} decay={1.8} color="#ffb86b" />
+      <mesh
+        ref={lens}
+        position={[-0.1, 0.94, -0.3]}
+        rotation={[Math.PI / 2, 0, 0]}
+        onClick={(e) => {
+          e.stopPropagation()
+          useCabin.getState().toggleLight()
+        }}
+        onPointerOver={(e) => {
+          e.stopPropagation()
+          document.body.style.cursor = 'pointer'
+        }}
+        onPointerOut={() => {
+          document.body.style.cursor = 'auto'
+        }}
+      >
+        <circleGeometry args={[0.03, 24]} />
         <meshBasicMaterial color="#33301f" toneMapped={false} />
       </mesh>
       <spotLight ref={light} position={[-0.1, 0.94, -0.3]} target-position={[0.05, -0.2, -0.5]} angle={0.45} penumbra={0.6} intensity={0} distance={3} decay={1.5} color="#ffe6b8" castShadow />

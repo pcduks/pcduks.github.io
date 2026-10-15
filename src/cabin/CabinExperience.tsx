@@ -174,6 +174,11 @@ export default function CabinExperience() {
     }
     useCabin.getState().setPhase('boarding')
     window.setTimeout(() => useCabin.getState().setPhase('cruise'), 900)
+    // Seven seconds of window, then lean in to the screen unless the visitor already did something.
+    window.setTimeout(() => {
+      const st = useCabin.getState()
+      if (st.focus === 'overview' && st.screen === 'home' && !st.compact) st.setFocus('screen')
+    }, 7500)
   }
 
   return (

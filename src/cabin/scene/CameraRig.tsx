@@ -22,9 +22,9 @@ export default function CameraRig() {
     let fov: number
     let parallax = 1
     if (compact) {
-      fov = 50
-      pos.set(-0.26, 0.12, -0.12)
-      look.set(LAYOUT.window.x + 0.22, LAYOUT.window.y, LAYOUT.window.z - 0.5)
+      fov = 54
+      pos.set(-0.18, 0.16, -0.08)
+      look.set(LAYOUT.window.x - 0.05, LAYOUT.window.y - 0.02, LAYOUT.window.z - 0.3)
     } else if (focus === 'screen') {
       // Lean in: the screen fills most of the frame and stays readable.
       fov = aspect > 1.6 ? 36 : 44
