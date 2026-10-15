@@ -1,6 +1,7 @@
 import profileJson from '../../content/profile.json'
 import projectsJson from '../../content/projects.json'
 import githubJson from '../generated/github.json'
+import cabinJson from '../../content/cabin.json'
 
 export type Leg = {
   id: string
@@ -48,5 +49,6 @@ export type Profile = typeof profileJson & { legs: Leg[] }
 export const profile = profileJson as Profile
 export const projects = projectsJson as Project[]
 export const github = githubJson as { fetchedAt: string | null; repos: Repo[] }
+export const cabin = cabinJson
 
 export const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`

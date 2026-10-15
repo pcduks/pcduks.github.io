@@ -1,0 +1,25 @@
+.cabin { position: fixed; inset: 0; background: #05070f; overflow: hidden; }
+.cabin__canvas { position: absolute; inset: 0; }
+.cabin--compact .cabin__canvas { inset: 0 0 auto 0; height: 38svh; }
+.cabin__panel { position: absolute; left: 0; right: 0; bottom: 0; height: 62svh; padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); background: #05070f; }
+.cabin__panel .ife { font-size: 14px; }
+.cabin__panel .ife__tiles { grid-template-columns: repeat(2, 1fr); }
+.cabin__panel .ife__hero h1 { font-size: 34px; }
+
+.gate { position: absolute; inset: 0; z-index: 30; display: grid; place-items: center; padding: 20px; background: radial-gradient(120% 90% at 70% 30%, #141f45 0%, #0b1020 55%, #070a16 100%); transition: opacity 0.9s ease, transform 0.9s ease; }
+.gate--out { opacity: 0; transform: scale(1.04); pointer-events: none; }
+.gate__card { width: min(440px, 100%); background: #f3ead9; color: #1a1206; border-radius: 16px; padding: 26px 28px 22px; box-shadow: 0 40px 120px rgba(0,0,0,0.6); position: relative; }
+.gate__card::before, .gate__card::after { content: ''; position: absolute; top: 50%; width: 22px; height: 22px; border-radius: 50%; background: #0b1020; transform: translateY(-50%); }
+.gate__card::before { left: -11px; }
+.gate__card::after { right: -11px; }
+.gate__kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #b97a1b; margin: 0 0 6px; }
+.gate__card h1 { font-family: var(--serif); font-size: 48px; line-height: 1; margin: 0 0 16px; color: #0b1020; }
+.gate__card h1 em { font-style: italic; color: #b97a1b; }
+.gate__grid { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; margin: 0 0 18px; font-size: 14px; }
+.gate__grid dt { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6b6657; align-self: center; }
+.gate__grid dd { margin: 0; font-weight: 500; }
+.gate__bar { height: 4px; background: rgba(11,16,32,0.12); border-radius: 2px; overflow: hidden; margin-bottom: 16px; }
+.gate__bar span { display: block; height: 100%; background: #b97a1b; transition: width 0.3s; }
+.gate__board { width: 100%; justify-content: center; font-size: 16px; padding: 14px; }
+.gate__board:disabled { opacity: 0.6; cursor: wait; transform: none; }
+.gate__note { margin: 12px 0 0; font-size: 12.5px; color: #6b6657; text-align: center; }

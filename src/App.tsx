@@ -1,46 +1,24 @@
-import { useEffect, useState } from 'react'
-import Nav from './components/Nav'
-import Hero from './components/Hero'
-import About from './components/About'
-import Legs from './components/Legs'
-import Builds from './components/Builds'
-import Toolkit from './components/Toolkit'
-import Elsewhere from './components/Elsewhere'
-import Help from './components/Help'
-import GlobeStage from './scene/GlobeStage'
+import { lazy, Suspense } from 'react'
+import StaticSite from './static/StaticSite'
 import { useReducedMotion, useStaticPreference, useWebGL } from './lib/hooks'
 
+const CabinExperience = lazy(() => import('./cabin/CabinExperience'))
+
+/**
+ * Two ways in: the cabin (a window seat on a night flight, WebGL) or the static page.
+ * Reduced motion, no WebGL, or an explicit choice (?static, or the toggle) picks the page.
+ */
 export default function App() {
   const reduced = useReducedMotion()
   const webgl = useWebGL()
-  const [staticPref, setStaticPref] = useStaticPreference()
-  const [help, setHelp] = useState(false)
-
-  const canGoLive = !reduced && webgl !== false
-  const live = canGoLive && !staticPref && webgl === true
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === '?') setHelp((h) => !h)
-      if (e.key === 'Escape') setHelp(false)
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [])
-
+  const [staticPref] = useStaticPreference()
+  const forced = new URLSearchParams(window.location.search).has('static')
+  if (webgl === null) return null
+  const live = webgl && !reduced && !staticPref && !forced
+  if (!live) return <StaticSite />
   return (
-    <>
-      <GlobeStage live={live} />
-      <Nav onHelp={() => setHelp(true)} />
-      <main className={live ? 'page page--live' : 'page page--static'}>
-        <Hero animate={!reduced} />
-        <About />
-        <Legs />
-        <Builds />
-        <Toolkit />
-        <Elsewhere />
-      </main>
-      <Help open={help} onClose={() => setHelp(false)} staticMode={!live} setStaticMode={(v) => setStaticPref(v)} canGoLive={canGoLive} />
-    </>
+    <Suspense fallback={null}>
+      <CabinExperience />
+    </Suspense>
   )
 }

@@ -1,0 +1,30 @@
+{
+  "pitch": "Applied AI product and go-to-market lead at Google, APAC. I ship agentic systems that do real work for commercial teams, and I have carried a number, a roadmap and a regulator's checklist, sometimes in the same quarter.",
+  "proof": [
+    { "value": "70%", "label": "less manual analysis across six retail markets, from the APAC Commercial Insights Agent" },
+    { "value": "~$100M", "label": "additional revenue enabled in Japan, Google's best 2022 results globally" },
+    { "value": "245k", "label": "merchants on Google Pay India, upgrade rate up 120%" }
+  ],
+  "heading": {
+    "title": "Where this flight is headed",
+    "body": "I want to lead applied AI products and their go-to-market in Asia: the kind of work where a model has to earn the trust of a finance team or a regulator, not just a demo audience. I am most useful where strategy, product and the actual build meet.",
+    "principles": [
+      { "title": "Ship the thing, not the deck", "body": "Prototypes beat opinions. I build enough of it myself to know what the team is signing up for." },
+      { "title": "Evals before autonomy", "body": "An agent earns scope by passing benchmarks, not by looking clever once." },
+      { "title": "Numbers both ways", "body": "I translate between what the model can do and what the P&L needs, in both directions, without losing the plot." }
+    ]
+  },
+  "menu": {
+    "note": "Service in English and Portuguese. Vegetarian options and SQL available on request."
+  },
+  "announcements": [
+    { "id": "welcome", "text": "Good evening, and welcome aboard. This is your captain speaking. We are cruising at thirty-eight thousand feet, somewhere over the Bay of Bengal, on our way to Singapore. My name is Pedro Parra. I lead applied AI and commercial operations for Google in Asia Pacific, and for the next few minutes, this seat is yours. The screen in front of you works. The window works too. Sit back, and have a look around." },
+    { "id": "google-ai", "text": "Ladies and gentlemen, we are now over Singapore. This is where I work today: agentic systems for Google's commercial teams across Asia Pacific. Multi-tier agents on stateful orchestrators, cutting manual analysis by seventy percent across six markets. Also, evals, governance, and a prototype on Gemini Nano that listens to electric scooters for faults. It's a good job." },
+    { "id": "gpay-india", "text": "We are passing over India. For a year, one day a week, I was the acting product lead for Google Pay India's merchant help and education. Two hundred and forty-five thousand merchants, upgrade rate up one hundred and twenty percent, and a verification pipeline that met Reserve Bank of India guidelines. Hybrid AI and human review, with Gemini Live doing the pre-flight checks." },
+    { "id": "google-devices", "text": "On your left, Japan. From twenty-nineteen to twenty twenty-six I ran strategy and operations for Google's hardware business in Asia Pacific: Pixel, Nest, more than ten launches. In twenty twenty-two the region posted Google's best results globally, with about one hundred million dollars of additional revenue in Japan. I also built and led a team of three, which I'd do again in a heartbeat." },
+    { "id": "linkedin", "text": "This is the leg that moved me from Brazil to Singapore. Three years at LinkedIn in sales operations and strategy, first for Latin America, then for Asia Pacific. A two hundred and fifty million dollar segment, forty percent compound growth, and a lot of SQL that saved people fifty hours a quarter." },
+    { "id": "mckinsey", "text": "We are crossing São Paulo. Two years at McKinsey as a consultant, advising banks and telcos on digital channels and market entry. One growth strategy for a digital bank turned into a one hundred million dollar investment plan. I also did pro bono work with Ashoka's social entrepreneurs, which I'm still proud of." },
+    { "id": "goldman", "text": "A short leg: six months of equity research at Goldman Sachs in São Paulo. Financial models, market data, and a lasting respect for a clean spreadsheet." },
+    { "id": "poli-usp", "text": "And this is where it all began: Escola Politécnica at the University of São Paulo, electrical engineering, with a year in the United States on a full scholarship from the Brazilian Ministry of Education. Computer engineering in Kansas City, a summer at Berkeley, and five years as captain of the university futsal team. Cabin crew, prepare for the rest of the site." }
+  ]
+}
