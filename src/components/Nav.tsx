@@ -2,11 +2,11 @@ import { profile } from '../lib/content'
 import { useScrolled } from '../lib/hooks'
 
 const items = [
-  { href: '#about', label: 'About' },
-  { href: '#log', label: 'Log' },
-  { href: '#builds', label: 'Builds' },
-  { href: '#toolkit', label: 'Toolkit' },
-  { href: '#contact', label: 'Contact' },
+  { href: '#about', label: 'About', compact: false },
+  { href: '#log', label: 'Log', compact: true },
+  { href: '#builds', label: 'Builds', compact: true },
+  { href: '#toolkit', label: 'Toolkit', compact: false },
+  { href: '#contact', label: 'Contact', compact: true },
 ]
 
 export default function Nav({ onHelp }: { onHelp: () => void }) {
@@ -19,7 +19,7 @@ export default function Nav({ onHelp }: { onHelp: () => void }) {
       </a>
       <nav aria-label="Sections">
         {items.map((i) => (
-          <a key={i.href} href={i.href}>
+          <a key={i.href} href={i.href} className={i.compact ? '' : 'nav__wide'}>
             {i.label}
           </a>
         ))}

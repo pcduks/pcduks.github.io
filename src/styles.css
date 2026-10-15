@@ -96,7 +96,10 @@ kbd {
   color: var(--ink); font: 600 14px var(--mono); cursor: pointer;
 }
 .nav__help:hover { border-color: var(--amber); color: var(--amber); }
-@media (max-width: 640px) { .nav nav { display: none; } }
+@media (max-width: 640px) {
+  .nav nav a.nav__wide { display: none; }
+  .nav__brand span:last-child { display: none; }
+}
 
 /* ---------- layout ---------- */
 

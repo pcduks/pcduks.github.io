@@ -12,21 +12,21 @@
   },
   {
     "repo": "pcduks/viagem-africa-do-sul",
-    "name": "Viagem África do Sul",
+    "name": "Rumo à África do Sul",
     "kicker": "The trip before this one",
-    "description": "The family's South Africa trip planner, and the prototype for everything the Japan app does better. Private repository, Portuguese throughout.",
-    "stack": ["TypeScript", "Next.js"],
+    "description": "A family travel companion in Brazilian Portuguese for sixteen days from Cape Town to a Madikwe safari, built for travellers from their twenties to their seventies on whatever phone they own. An offline-first PWA with a day-by-day diary, an hour-by-hour timeline, a guide and a sommelier you can chat with, live tips near you from Gemini with Google Search, wine labels read by Gemini vision, shared expenses and a notebook that sync when the signal returns, and watercolours generated for every chapter.",
+    "stack": ["Vite", "React 19", "Tailwind 4", "PWA", "Gemini", "Upstash Redis"],
     "image": "illustrations/viagem-africa-do-sul.webp",
-    "status": "Private",
-    "year": "2025",
+    "status": "In use",
+    "year": "2026",
     "tag": "CPT"
   },
   {
     "repo": "pcduks/portfolio-dashboard",
     "name": "Portfolio Dashboard",
-    "kicker": "A dashboard for my own numbers",
-    "description": "A personal dashboard for tracking a portfolio of investments across currencies. Built because the spreadsheet had stopped being fun. Private repository.",
-    "stack": ["TypeScript"],
+    "kicker": "Verdict first, machinery second",
+    "description": "A private household planning app for a two-person, three-currency (SGD, USD, BRL) path to financial independence. It opens on one honest sentence, on track, watch or slipping, instead of a wall of charts. A deterministic engine computes the verdict; a grounded assistant explains it and answers \"can we afford this?\", but never overrides it. No daily tickers, no streaks, no blended yield. Raw statements never leave the machine.",
+    "stack": ["Next.js 16", "TypeScript", "Supabase + RLS", "Gemini", "Claude API", "Vitest"],
     "image": "illustrations/portfolio-dashboard.webp",
     "status": "Private",
     "year": "2026",
@@ -35,12 +35,13 @@
   {
     "repo": "pcduks/formcoach",
     "name": "FormCoach",
-    "kicker": "A camera that watches your form",
-    "description": "An experiment in using multimodal models and pose estimation to coach exercise form from a phone camera. Private repository.",
-    "stack": ["TypeScript", "Multimodal AI"],
+    "kicker": "A coach in your pocket",
+    "description": "A personal AI coach for amateur athletes. It reads Whoop recovery and strain, knows the week's schedule, and takes voice notes, text and photos of meals, then turns all of it into the day's training and nutrition guidance. React Native app, a small TypeScript API, and a model that does the coaching.",
+    "stack": ["React Native + Expo", "Fastify", "Supabase", "Claude API", "Whisper", "Whoop API"],
     "image": "illustrations/formcoach.webp",
     "status": "Experiment",
     "year": "2026",
-    "tag": "GYM"
+    "tag": "GYM",
+    "prompt": "An amateur athlete lacing running shoes at dawn on a quiet track, a smartwatch glowing on the wrist, a phone propped nearby showing a simple sound-wave of a voice note, a bowl of fruit and eggs on the bench beside them. Warm, encouraging mood."
   }
 ]

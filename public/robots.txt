@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pcduks.github.io/sitemap.xml

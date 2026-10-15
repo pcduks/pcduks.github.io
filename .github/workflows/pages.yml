@@ -1,11 +1,6 @@
-# Deploys the site to GitHub Pages on every push to main.
-# First run: the configure-pages step tries to switch the repository to "GitHub Actions" as the Pages source.
-# If that step is refused, do it once by hand: Settings → Pages → Build and deployment → Source: GitHub Actions.
-#
-# This file is meant for the repository that holds the site at its root (pcduks.github.io). While the site
-# still lives in portfolio/ of japan-family-trip, GitHub ignores it there (workflows only run from the root .github/).
+# Deploys the site to GitHub Pages on every push to main (Settings → Pages → Source must be "GitHub Actions").
 # For a *project* site (https://<user>.github.io/<repo>/) set the VITE_BASE repository variable to "/<repo>/".
-# For a user site (https://<user>.github.io/) or a custom domain, leave it unset.
+# For this user site (https://pcduks.github.io/) or a custom domain, leave it unset.
 
 name: Deploy portfolio to GitHub Pages
 
