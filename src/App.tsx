@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
 import StaticSite from './static/StaticSite'
+import Gate from './cabin/Gate'
 import { useReducedMotion, useStaticPreference, useWebGL } from './lib/hooks'
 
 const CabinExperience = lazy(() => import('./cabin/CabinExperience'))
@@ -17,7 +18,7 @@ export default function App() {
   const live = webgl && !reduced && !staticPref && !forced
   if (!live) return <StaticSite />
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Gate progress={8} ready={false} />}>
       <CabinExperience />
     </Suspense>
   )

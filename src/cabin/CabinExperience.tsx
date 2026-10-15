@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Html, useProgress } from '@react-three/drei'
+import Gate from './Gate'
 import { Bloom, EffectComposer, Noise, Vignette } from '@react-three/postprocessing'
 import Cabin, { LAYOUT } from './scene/Cabin'
 import CameraRig from './scene/CameraRig'
@@ -8,7 +9,6 @@ import IFE, { channels } from './ife/IFE'
 import AudioDirector from './audio/AudioDirector'
 import { audio } from './audio/engine'
 import { useCabin } from './store'
-import { profile } from '../lib/content'
 import './cabin.css'
 
 const SCREEN_CSS_W = 1120 // CSS pixels drawn onto the seatback screen
@@ -35,43 +35,12 @@ function SeatbackScreen() {
 function Boarding({ onBoard }: { onBoard: (sound: boolean) => void }) {
   const { progress, active } = useProgress()
   const phase = useCabin((s) => s.phase)
-  const [sound, setSound] = useState(true)
   const ready = !active && progress >= 100
   useEffect(() => {
     if (ready && phase === 'loading') useCabin.getState().setPhase('gate')
   }, [ready, phase])
   if (phase === 'cruise') return null
-  return (
-    <div className={`gate ${phase === 'boarding' ? 'gate--out' : ''}`}>
-      <div className="gate__card">
-        <p className="gate__kicker">Boarding pass</p>
-        <h1>
-          {profile.shortName} <em>Parra</em>
-        </h1>
-        <dl className="gate__grid">
-          <dt>Flight</dt>
-          <dd>PP 1990</dd>
-          <dt>From</dt>
-          <dd>GRU · São Paulo</dd>
-          <dt>To</dt>
-          <dd>SIN · Singapore</dd>
-          <dt>Seat</dt>
-          <dd>32A · Window</dd>
-        </dl>
-        <div className="gate__bar">
-          <span style={{ width: `${Math.min(100, progress)}%` }} />
-        </div>
-        <label className="gate__sound">
-          <input type="checkbox" checked={sound} onChange={(e) => setSound(e.target.checked)} />
-          <span>Cabin audio: engine hum, a little music, and the captain. Headphones recommended.</span>
-        </label>
-        <button className="btn btn--primary gate__board" disabled={!ready} onClick={() => onBoard(sound)}>
-          {ready ? 'Board' : 'Preparing the cabin…'}
-        </button>
-        <p className="gate__note">Press M at any time to mute. Esc sits you back.</p>
-      </div>
-    </div>
-  )
+  return <Gate progress={Math.min(100, progress)} ready={ready} leaving={phase === 'boarding'} onBoard={onBoard} />
 }
 
 function Captions() {
